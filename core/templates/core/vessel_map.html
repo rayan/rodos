@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vessel Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const vessels = {{ vessels_json|safe }};
+
+    const map = L.map('map').setView([20, 38], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    vessels.forEach(vessel => {
+      L.marker([vessel.lat, vessel.lng])
+        .addTo(map)
+        .bindPopup(`
+          <strong>${vessel.name}</strong><br>
+          Type: ${vessel.type}<br>
+          Flag: ${vessel.flag}<br>
+          Speed: ${vessel.speed} kn<br>
+          Heading: ${vessel.heading}°
+        `);
+    });
+  </script>
+</body>
+</html>
